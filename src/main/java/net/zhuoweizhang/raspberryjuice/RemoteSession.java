@@ -162,8 +162,13 @@ public class RemoteSession {
 			// world.setBlock
 			} else if (c.equals("world.setBlock")) {
 				Location loc = parseRelativeBlockLocation(args[0], args[1], args[2]);
-				updateBlock(world, loc, Integer.parseInt(args[3]), (args.length > 4? Byte.parseByte(args[4]) : (byte) 0));
-				
+				updateBlock(world, loc, Integer.parseInt(args[3]), (args.length > 4 ? Byte.parseByte(args[4]) : (byte) 0));
+
+			} else if (c.equals("block.breakNaturally")) {
+				Location loc = parseRelativeBlockLocation(args[0], args[1], args[2]);
+				Block targetBlock = world.getBlockAt(loc);
+				targetBlock.breakNaturally();
+
 			// world.setBlocks
 			} else if (c.equals("world.setBlocks")) {
 				Location loc1 = parseRelativeBlockLocation(args[0], args[1], args[2]);
@@ -342,7 +347,12 @@ public class RemoteSession {
 			} else if (c.equals("player.getPitch")) {
 				Player currentPlayer = getCurrentPlayer();
 				send(currentPlayer.getLocation().getPitch());
-				
+
+			} else if (c.equals("player.getTargetBlock")) {
+				Player currentPlayer = getCurrentPlayer();
+				Location loc = currentPlayer.getTargetBlock((Set<Material>) null, 200).getLocation();
+				send(blockLocationToRelative(loc));
+
 				// world.getHeight
 			} else if (c.equals("world.getHeight")) {
 				send(world.getHighestBlockYAt(parseRelativeBlockLocation(args[0], "0", args[1])) - origin.getBlockY());
