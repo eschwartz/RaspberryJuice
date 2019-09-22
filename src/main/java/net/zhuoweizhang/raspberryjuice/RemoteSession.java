@@ -478,6 +478,17 @@ public class RemoteSession {
 					plugin.getLogger().info("Entity [" + args[0] + "] not found.");
 					send("Fail");
 				}
+
+			// entity.freeze
+			} else if (c.equals("entity.freeze")) {
+				//get entity based on id
+				LivingEntity entity = (LivingEntity) plugin.getEntity(Integer.parseInt(args[0]));
+				if (entity != null) {
+					plugin.freezer.freezeEntity(entity);
+				} else {
+					plugin.getLogger().info("Entity [" + args[0] + "] not found.");
+					send("Fail");
+				}
 				
 			// world.setSign
 			} else if (c.equals("world.setSign")) {

@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.EventHandler;
@@ -37,6 +38,12 @@ public class RaspberryJuicePlugin extends JavaPlugin implements Listener {
 	}
 	public HitClickType getHitClickType() {
 		return hitClickType;
+	}
+
+	public EntityFreeze freezer;
+
+	public RaspberryJuicePlugin() {
+		freezer = new EntityFreeze(this);
 	}
 
 	public void onEnable() {
