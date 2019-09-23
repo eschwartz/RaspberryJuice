@@ -42,11 +42,9 @@ public class RaspberryJuicePlugin extends JavaPlugin implements Listener {
 
 	public EntityFreeze freezer;
 
-	public RaspberryJuicePlugin() {
-		freezer = new EntityFreeze(this);
-	}
-
 	public void onEnable() {
+		freezer = new EntityFreeze(this);
+
 		//save a copy of the default config.yml if one is not there
         this.saveDefaultConfig();
         //get port from config.yml

@@ -14,9 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 /**
  * @author Goblom
@@ -33,7 +33,7 @@ public class EntityFreeze implements Listener {
 
     public EntityFreeze(RaspberryJuicePlugin plugin) {
         this.plugin = plugin;
-        tasks.add(scheduler.runTaskTimer(this.plugin, new Freeze(), 0, 20L)); //plugin represents your JavaPlugin
+        tasks.add(scheduler.runTaskTimer(this.plugin, new Freeze(), 0, 1L)); //plugin represents your JavaPlugin
         pluginManager.registerEvents(this, this.plugin);
     }
 
@@ -43,6 +43,14 @@ public class EntityFreeze implements Listener {
 
     public boolean isFrozen(LivingEntity entity) {
         return frozenEntities.containsKey(entity.getEntityId());
+    }
+
+    public void teleport(LivingEntity entity, Location loc) throws Exception {
+        if (!isFrozen(entity)) {
+            throw new Exception("Entity " + Integer.toString(entity.getEntityId()) + "is not frozen");
+        }
+        frozenEntities.put(entity.getEntityId(), loc);
+        entity.teleport(loc);
     }
 
     @EventHandler
@@ -65,7 +73,10 @@ public class EntityFreeze implements Listener {
         public void run() {
             for (Map.Entry<Integer, Location> entry : frozenEntities.entrySet()) {
                 LivingEntity entity = (LivingEntity) plugin.getEntity(entry.getKey());
-                entity.teleport(entry.getValue());
+                if (entity != null && !entity.isDead()) {
+                    entity.teleport(entry.getValue());
+                    entity.setVelocity(new Vector(0, 0, 0));
+                }
             }
         }
     }

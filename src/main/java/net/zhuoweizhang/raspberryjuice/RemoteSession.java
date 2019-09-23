@@ -401,8 +401,15 @@ public class RemoteSession {
 				Entity entity = plugin.getEntity(Integer.parseInt(args[0]));
 				if (entity != null) {
 					//get entity's current location, so when they are moved we will use the same pitch and yaw (rotation)
-					Location loc = entity.getLocation();
-					entity.teleport(parseRelativeLocation(x, y, z, loc.getPitch(), loc.getYaw()));
+					Location prevLocation = entity.getLocation();
+					Location nextLocation = parseRelativeLocation(x, y, z, prevLocation.getPitch(), prevLocation.getYaw());
+
+					// Handle frozen entities
+					if (plugin.freezer.isFrozen((LivingEntity) entity)) {
+						plugin.freezer.teleport((LivingEntity) entity, nextLocation);
+					} else {
+						entity.teleport(nextLocation);
+					}
 				} else {
 					plugin.getLogger().info("Entity [" + args[0] + "] not found.");
 					send("Fail");
